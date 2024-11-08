@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 var bullet_type = "9mm"
 @export var speed = 800
-@export var max_bounces = 100000000000
+@export var max_bounces = 3
 var damage
 var bounce_count = 0
 

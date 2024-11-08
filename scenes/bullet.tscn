@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bo3rndwoscbew"]
 
-[ext_resource type="Script" path="res://scripts/Bullet.gd" id="1_sgnnt"]
+[ext_resource type="Script" path="res://scripts/Bullet.gd" id="1_nopav"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nyoiy"]
 size = Vector2(20, 10)
@@ -9,7 +9,7 @@ size = Vector2(20, 10)
 z_index = 1
 collision_layer = 2
 collision_mask = 4
-script = ExtResource("1_sgnnt")
+script = ExtResource("1_nopav")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(0.5, 0.5)
