@@ -55,5 +55,5 @@ z_index = 3
 position = Vector2(2063, 1103)
 collision_layer = 8
 collision_mask = 5
-player_path = NodePath("../Player")
 main_path = NodePath("..")
+player_path = NodePath("../Player")

@@ -1,6 +1,9 @@
 extends CharacterBody2D
 
 @export var bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
+@onready var collision_shape_2D = $CollisionShape2D
+var shape
+var radius
 
 @export var health = 100
 @export var walk_speed = 300
@@ -58,6 +61,9 @@ var sweep_range = arsenal["Sword"]["sweep_range"]
 var sword_offset = arsenal["Sword"]["sweep_range"] / 2.0
 
 func _ready():
+	shape = collision_shape_2D.shape
+	radius = shape.radius
+	
 	barrel.visible = !barrel.visible
 	sword.visible = !sword.visible
 	pass
