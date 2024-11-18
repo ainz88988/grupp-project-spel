@@ -1,9 +1,19 @@
+#Player script
+
 extends CharacterBody2D
 
-@export var bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
+@export var bullet_scene : PackedScene = preload("res://scenes/Bullet.tscn")
 @onready var collision_shape_2D = $CollisionShape2D
 var shape
 var radius
+@onready var camera = $Camera2D
+var camera_top_left
+var camera_bottom_right
+var camera_area
+
+var zombie
+@export var zombie_path = NodePath("Zombie")
+
 
 @export var health = 100
 @export var walk_speed = 300
@@ -17,10 +27,6 @@ var angle_to_mouse = 0
 var barrel_length = 40
 var cooldown = false
 var spread_sum = 0
-
-var grabbed = false
-var time_to_nibbling = 0
-var active_timer = 0
 
 var arsenal = {
 	"Sword": {
@@ -61,14 +67,17 @@ var sweep_range = arsenal["Sword"]["sweep_range"]
 var sword_offset = arsenal["Sword"]["sweep_range"] / 2.0
 
 func _ready():
+	zombie = get_node(zombie_path)
+	zombie.player_exists = true
+	
 	shape = collision_shape_2D.shape
 	radius = shape.radius
 	
 	barrel.visible = !barrel.visible
 	sword.visible = !sword.visible
-	pass
-
+	
 func _physics_process(delta):
+	get_camera_corners()
 	var direction = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
 	if !Input.is_action_pressed("sprint"):
 		velocity = direction * walk_speed
@@ -89,14 +98,6 @@ func _physics_process(delta):
 		sword.rotation = barrel.rotation + swing_start_angle
 	else:
 		swing(delta, last_barrel_rotation)
-
-	if grabbed:
-		active_timer += delta
-		if active_timer >= time_to_nibbling:
-			take_damage(10)
-			print("Ouch!")
-	else:
-		active_timer = 0.0
 	
 	if Input.is_action_just_pressed("scroll_up"):
 		var current_index = arsenal_keys.find(selected_weapon)
@@ -161,17 +162,18 @@ func swing(delta, initial_rotation):
 
 func shoot():
 	print(selected_weapon + " fired!")
+	print(global_position)
 	var damage = arsenal[selected_weapon]["bullet_damage"]
 	var bullets_per_shot = arsenal[selected_weapon]["bullets_per_shot"]
 	var bullet_type = arsenal[selected_weapon]["bullet_type"]
 	for i in range(bullets_per_shot):
 		var spread = randf_range(-deg_to_rad(arsenal[selected_weapon]["spread"]), deg_to_rad(arsenal[selected_weapon]["spread"]))
-		var bullet = bullet_scene.instantiate()
-		bullet.bullet_type = bullet_type
-		bullet.global_position = barrel.global_position + barrel_length * direction_to_mouse
-		bullet.rotation = barrel.rotation + spread
-		bullet.damage = damage
-		get_tree().root.add_child(bullet)
+		var bullet_instance = bullet_scene.instantiate()
+		bullet_instance.bullet_type = bullet_type
+		bullet_instance.global_position = barrel.global_position + barrel_length * direction_to_mouse
+		bullet_instance.rotation = barrel.rotation + spread
+		bullet_instance.damage = damage
+		get_tree().root.add_child(bullet_instance)
 	print("\t" + "[Bullet type: " + arsenal[selected_weapon]["bullet_type"] + "]")
 	#print("\t" + "[Shot spread (degrees): " + str(rad_to_deg(spread)) + "]")
 	#spread_sum += spread
@@ -181,5 +183,19 @@ func shoot():
 	
 func take_damage(damage : float):
 	health -= damage
+	print(health)
 	if health <= 0:
-		queue_free()
+		if is_instance_valid(zombie):
+			zombie.player_exists = false
+		print("Game_Over")
+		get_tree().change_scene_to_file("res://Game_Over.tscn")
+
+
+func get_camera_corners():
+	var viewport_size = get_viewport().get_visible_rect().size
+	var zoom = camera.zoom
+	var half_size = (viewport_size * zoom) / 2
+
+	camera_top_left = global_position - half_size
+	camera_bottom_right = global_position + half_size
+	camera_area = Rect2(camera_top_left, camera_bottom_right - camera_top_left)

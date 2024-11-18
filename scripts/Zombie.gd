@@ -1,4 +1,7 @@
+#Zombie script
+
 extends CharacterBody2D
+class_name Zombie
 
 @onready var navigation_agent_2D : NavigationAgent2D = $NavigationAgent2D
 @onready var collision_shape_2D = $CollisionShape2D
@@ -8,6 +11,7 @@ extends CharacterBody2D
 
 var main_scene
 var player
+var player_exists = true
 var health = 20
 @export var healths = [20, 40, 60]
 var speed = 100
@@ -18,21 +22,16 @@ var matrix = []
 var direction
 var shape
 
+var nomnoming = false
+
 func _ready():
 	shape = collision_shape_2D.shape
-	
-	#navigation_agent_2D.agent_radius = shape.radius
-	
-	#for y in range(0, 41):
-	#	matrix.append([])
-	#	for x in range(0, 71):
-	#		matrix[y].append(x)
-	#main_scene = get_node()
 	player = get_node(player_path)
 	main_scene = get_node(main_path)
 
 func _physics_process(delta):
-	if player:
+	#print("My layer: " + str(self.collision_layer))
+	if player_exists:
 		var current_position = global_position
 		navigation_agent_2D.target_position = get_adjusted_target_position(current_position, player.global_position, shape.radius, player.radius)
 		var next_path_position = navigation_agent_2D.get_next_path_position()
@@ -45,19 +44,28 @@ func _physics_process(delta):
 		else:
 			_on_navigation_agent_2d_velocity_computed(new_velocity)
 		
+		var distance_to_player = pow(pow(abs(global_position.x - player.global_position.x), 2) + pow(abs(global_position.y - player.global_position.y), 2), 0.5)
+		var nomnom_distance = shape.radius + player.radius + 1
 		
-		#direction = (player.global_position - global_position).normalized()
-		#velocity = direction * speed
+		
+		if distance_to_player <= nomnom_distance and nomnoming == false:
+			nomnoming = true
+			player.take_damage(10)
+			if get_tree():
+				await get_tree().create_timer(0.1).timeout
+			nomnoming = false
+			
 		move_and_slide()
 
 func get_adjusted_target_position(agent_position: Vector2, target_position: Vector2, agent_radius: float, player_radius : float) -> Vector2:
-	var direction = (target_position - agent_position).normalized()
+	direction = (target_position - agent_position).normalized()
 	return target_position - direction * (agent_radius + player_radius)
 
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	velocity = safe_velocity
 
-
-func _on_navigation_agent_2d_navigation_finished() -> void:
-	pass # Replace with function body.
+func take_damage(damage: float):
+	health -= damage
+	if health <= 0:
+		queue_free()
