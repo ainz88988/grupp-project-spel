@@ -1,18 +1,138 @@
-[gd_scene load_steps=4 format=3 uid="uid://ciliodrgqo22s"]
+[gd_scene load_steps=13 format=3 uid="uid://ciliodrgqo22s"]
 
 [ext_resource type="Script" path="res://scripts/Zombie.gd" id="1_4wujx"]
-[ext_resource type="Script" path="res://scripts/Zombie_collision.gd" id="2_awptk"]
+[ext_resource type="Texture2D" uid="uid://dmx2y8kwpj7f" path="res://sprites/zombie.png" id="2_5dyxq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u7u33"]
+atlas = ExtResource("2_5dyxq")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dwqls"]
+atlas = ExtResource("2_5dyxq")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_le0co"]
+atlas = ExtResource("2_5dyxq")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vakj0"]
+atlas = ExtResource("2_5dyxq")
+region = Rect2(192, 128, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_soawq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u7u33")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dwqls")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_le0co")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vakj0")
+}],
+"loop": true,
+"name": &"Walking",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_213d4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_2asr8"]
+resource_name = "Walking"
+length = 0.4
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Walking"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_t24q0"]
+_data = {
+"RESET": SubResource("Animation_213d4"),
+"Walking": SubResource("Animation_2asr8")
+}
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hyl18"]
 
+[sub_resource type="GDScript" id="GDScript_ckp5r"]
+script/source = "extends CollisionShape2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+	
+func _draw():
+	pass
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
 [node name="Zombie" type="CharacterBody2D"]
 collision_layer = 8
-collision_mask = 3
+collision_mask = 4
 script = ExtResource("1_4wujx")
 
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_soawq")
+animation = &"Walking"
+frame = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_t24q0")
+}
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(2, 2)
 shape = SubResource("CircleShape2D_hyl18")
-script = ExtResource("2_awptk")
+script = SubResource("GDScript_ckp5r")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_postprocessing = 1

@@ -37,5 +37,6 @@ func handle_collision(collision):
 			queue_free()
 	elif collider is Zombie:
 		if collider.has_method("take_damage"):
-			collider.take_damage(100)
-		queue_free()
+			collider.take_damage(damage)
+		if collider.health > 0:
+			queue_free()

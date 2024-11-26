@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dr88njgbspns3"
-path="res://.godot/imported/vägg block.png-1d24110ca289e777c03cf4f6b2be6ee0.ctex"
+uid="uid://cono81ypp6oek"
+path="res://.godot/imported/Firing_shotgun.png-6648086cbd40b083a034117c3ae0afef.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scripts/vägg block.png"
-dest_files=["res://.godot/imported/vägg block.png-1d24110ca289e777c03cf4f6b2be6ee0.ctex"]
+source_file="res://sprites/Firing_shotgun.png"
+dest_files=["res://.godot/imported/Firing_shotgun.png-6648086cbd40b083a034117c3ae0afef.ctex"]
 
 [params]
 

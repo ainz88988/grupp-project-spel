@@ -1,7 +1,14 @@
 extends Node2D
 
 @export var zombie_scene : PackedScene = preload("res://scenes/Zombie.tscn")
-@export var zombie_limit = 10
+@export var zombie_limit = 20
+@onready var zombie = $Zombie
+
+
+@export var main_path = NodePath("Main")
+@export var player_path = NodePath("Player")
+@export var ground_path = NodePath("Ground")
+@export var walls_path = NodePath("Walls")
 
 @onready var player = $Player
 var camera_area
@@ -38,6 +45,10 @@ func spawn_zombies():
 			if spawn_locations.size() > 0:
 				var random_index = randi_range(0, spawn_locations.size() - 1)
 				zombie_instance.global_position = spawn_locations[random_index]
+				zombie_instance.main_scene = get_node(main_path)
+				zombie_instance.player = get_node(player_path)
+				zombie_instance.ground = get_node(ground_path)
+				zombie_instance.walls = get_node(walls_path)
 				add_child(zombie_instance)
 				zombie_instance.player = player
 			else:
