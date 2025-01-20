@@ -261,21 +261,6 @@ tracks/1/keys = {
 "values": [4, 5, 0, 1, 2]
 }
 
-[sub_resource type="Animation" id="Animation_0xtve"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AnimatedSprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-
 [sub_resource type="Animation" id="Animation_supo8"]
 resource_name = "Idle"
 length = 0.9
@@ -304,6 +289,21 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5, 6, 7]
+}
+
+[sub_resource type="Animation" id="Animation_0xtve"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
 }
 
 [sub_resource type="Animation" id="Animation_26sma"]
@@ -352,6 +352,7 @@ size = Vector2(60, 4)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 3
+texture_filter = 1
 collision_mask = 4
 motion_mode = 1
 script = ExtResource("1_tcpjd")
@@ -360,7 +361,7 @@ swing_duration = 0.2
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_eb40v")
-animation = &"Reload_pistol"
+animation = &"Idle"
 frame = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

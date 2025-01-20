@@ -7,6 +7,7 @@ size = Vector2(20, 10)
 
 [node name="Bullet" type="CharacterBody2D"]
 z_index = 1
+texture_filter = 1
 collision_layer = 2
 collision_mask = 12
 script = ExtResource("1_lj4fx")
